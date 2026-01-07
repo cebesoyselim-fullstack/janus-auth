@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -25,6 +26,8 @@ import { LoggerModule } from 'nestjs-pino';
             : undefined,
       },
     }),
+    // Database module - provides Drizzle ORM instance globally
+    DatabaseModule,
   ],
 })
 export class AppModule {}
