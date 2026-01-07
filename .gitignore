@@ -1,0 +1,52 @@
+# Compiled output (Derlenmiş dosyalar)
+/dist
+/build
+
+# Dependencies (Bağımlılıklar)
+/node_modules
+
+# Logs (Log kayıtları)
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables (GÜVENLİK İÇİN ÇOK ÖNEMLİ)
+# .env dosyalarını asla commit'leme!
+.env
+.env.production
+.env.development
+.env.test
+.env.local
+
+# İstisna: Örnek env dosyasını tutabilirsin
+! .env.example
+
+# Editor directories and files (Editör ayarları)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+.idea
+.DS_Store
+*.swp
+*.swo
+
+# Testing (Test raporları)
+/coverage
+/test-report
+
+# Drizzle / Database Local Files
+# Eğer localde sqlite kullanırsan db dosyasını yükleme
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# NestJS CLI
+nest-cli.json
+tsconfig.build.json
+
+# OS Generated
+Thumbs.db
