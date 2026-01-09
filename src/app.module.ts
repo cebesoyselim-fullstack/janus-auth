@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -28,6 +30,10 @@ import { DatabaseModule } from './database/database.module';
     }),
     // Database module - provides Drizzle ORM instance globally
     DatabaseModule,
+    // Authentication module - handles login, register, logout
+    AuthModule,
+    // Users module - handles user management
+    UsersModule,
   ],
 })
 export class AppModule {}
