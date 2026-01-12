@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from '../users/users.module';
+import { MailModule } from '../mail/mail.module';
 
 /**
  * Auth Module
@@ -30,6 +31,9 @@ import { UsersModule } from '../users/users.module';
     // Import UsersModule to use UsersService
     // UsersModule exports UsersService, avoiding circular dependency
     UsersModule,
+    
+    // Import MailModule to send verification emails
+    MailModule,
     
     // Passport module for authentication strategies
     PassportModule.register({ defaultStrategy: 'jwt' }),

@@ -1,10 +1,13 @@
 import {
   Controller,
   Post,
+  Get,
   Body,
+  Query,
   UseGuards,
   HttpCode,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -34,11 +37,12 @@ export class AuthController {
    * 
    * Route: POST /auth/register
    * 
-   * Creates a new user account and returns authentication tokens.
+   * Creates a new user account and sends verification email.
+   * User must verify email before they can login.
    * This endpoint is public (no authentication required).
    * 
    * @param registerDto - Registration data
-   * @returns Access and refresh tokens
+   * @returns Success message (no tokens - email verification required)
    */
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
@@ -87,6 +91,32 @@ export class AuthController {
   ) {
     await this.authService.logout(body.refresh_token, user.id);
     return { message: 'Logged out successfully' };
+  }
+
+  /**
+   * Verify Email Address
+   * 
+   * Route: GET /auth/verify-email?token=<verification_token>
+   * 
+   * Verifies a user's email address using the token from the verification email.
+   * This endpoint is public (no authentication required).
+   * 
+   * After successful verification:
+   * - User's is_email_verified is set to true
+   * - All verification tokens for that user are deleted (hard delete)
+   * - User can now log in
+   * 
+   * @param token - Verification token from email link (query parameter)
+   * @returns Success message
+   */
+  @Get('verify-email')
+  @HttpCode(HttpStatus.OK)
+  async verifyEmail(@Query('token') token: string) {
+    if (!token) {
+      throw new BadRequestException('Verification token is required');
+    }
+
+    return this.authService.verifyEmail(token);
   }
 }
 
