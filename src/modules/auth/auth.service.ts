@@ -5,6 +5,7 @@ import {
   Logger,
   BadRequestException,
   ConflictException,
+  NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { eq, and, isNull, lt } from 'drizzle-orm';
@@ -16,10 +17,11 @@ import {
 } from '../../database/schema';
 import { UsersService } from '../users/users.service';
 import { MailService } from '../mail/mail.service';
+import { AppsService } from '../apps/apps.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtPayload } from './strategies/jwt.strategy';
-import { randomBytes } from 'crypto';
+import { randomBytes, randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 
 /**
@@ -44,6 +46,7 @@ export class AuthService {
     @Inject('DRIZZLE_DB')
     private readonly db: Database,
     private readonly usersService: UsersService,
+    private readonly appsService: AppsService,
     private readonly jwtService: JwtService,
     private readonly mailService: MailService,
   ) {}
@@ -192,6 +195,21 @@ export class AuthService {
    */
   async register(registerDto: RegisterDto) {
     // Pre-transaction checks (outside transaction for better performance)
+    
+    // Validate that the app (tenant) exists
+    // This ensures referential integrity and prevents orphaned user records
+    // Why check before transaction? Fail fast if app doesn't exist - no need to start transaction
+    try {
+      await this.appsService.findOne(registerDto.app_id);
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new BadRequestException(
+          `App with ID ${registerDto.app_id} does not exist. Please use a valid app ID.`,
+        );
+      }
+      throw error; // Re-throw if it's a different error
+    }
+
     // Check if user already exists using composite key (app_id + email)
     const existingUser = await this.usersService.findByEmail(
       registerDto.email,

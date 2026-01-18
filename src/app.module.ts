@@ -4,6 +4,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
+import { AppsModule } from './modules/apps/apps.module';
 
 @Module({
   imports: [
@@ -34,6 +35,8 @@ import { UsersModule } from './modules/users/users.module';
     AuthModule,
     // Users module - handles user management
     UsersModule,
+    // Apps module - handles app (tenant) management
+    AppsModule,
   ],
 })
 export class AppModule {}

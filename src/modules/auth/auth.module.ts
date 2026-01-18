@@ -7,6 +7,7 @@ import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { UsersModule } from '../users/users.module';
 import { MailModule } from '../mail/mail.module';
+import { AppsModule } from '../apps/apps.module';
 
 /**
  * Auth Module
@@ -31,6 +32,9 @@ import { MailModule } from '../mail/mail.module';
     // Import UsersModule to use UsersService
     // UsersModule exports UsersService, avoiding circular dependency
     UsersModule,
+    
+    // Import AppsModule to validate app existence during registration
+    AppsModule,
     
     // Import MailModule to send verification emails
     MailModule,
